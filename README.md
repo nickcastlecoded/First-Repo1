@@ -1,16 +1,45 @@
-# React + Vite
+# Pawza Pets
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A single-page e-commerce marketing site for Pawza Pets, a fictional premium dog supplement brand.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React 19** + **Vite 8** — UI and build tooling
+- **Inline styles** — all component styling via the `style` prop
+- **Google Fonts** — Playfair Display (headings) + DM Sans (body)
+- No router, no state management library, no test framework
 
-## React Compiler
+## Project Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```
+src/
+├── main.jsx      # React root mount
+├── index.css     # Global reset, keyframe animations, responsive media queries
+└── App.jsx       # Entire application — all components and page sections
+```
 
-## Expanding the ESLint configuration
+## Running Locally
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev       # http://localhost:5173
+```
+
+## Other Commands
+
+```bash
+npm run build     # production build → dist/
+npm run preview   # preview the production build
+npm run lint      # ESLint check
+```
+
+## Page Sections
+
+1. Fixed navigation with cart drawer
+2. Hero with animated stats counters
+3. Product grid (3 products) with subscribe & save toggle
+4. Benefits + key ingredients panel
+5. Customer testimonials
+6. Subscribe & Save CTA with frequency selector
+7. FAQ accordion
+8. Footer

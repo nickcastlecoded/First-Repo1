@@ -18,12 +18,9 @@ const products = [
     description:
       "The ultimate daily supplement for your pup. Packed with 12 essential nutrients to support digestion, immunity, heart health, energy, joints, and overall wellness — all in one tasty bite.",
     benefits: ["Digestion", "Immune Support", "Heart Health", "Energy", "Joint Support", "Skin & Coat"],
-    ingredients:
-      "Glucosamine HCl, Chondroitin Sulfate, Organic Turmeric, Probiotics (Lactobacillus Acidophilus), Omega-3 Fish Oil, Vitamin E, Vitamin B Complex, Biotin, CoQ10, Zinc, Selenium, Pumpkin Blend",
     color: TEAL,
     icon: "✦",
     badge: "Best Seller",
-    hasImage: false,
   },
   {
     id: 2,
@@ -32,12 +29,9 @@ const products = [
     description:
       "Soothe seasonal allergies and stop the scratch. Our advanced formula targets itchy skin, hot spots, and environmental sensitivities with natural anti-inflammatory ingredients.",
     benefits: ["Itch Relief", "Skin Health", "Immune Balance", "Anti-Inflammatory", "Seasonal Support", "Coat Shine"],
-    ingredients:
-      "Colostrum, Quercetin, Bromelain, Wild Alaskan Salmon Oil, Organic Licorice Root, Apple Cider Vinegar, Turmeric Curcumin, Probiotics, Vitamin C, Stinging Nettle, Bee Pollen, Flaxseed",
     color: "#d4883a",
     icon: "❋",
     badge: "New",
-    hasImage: false,
   },
   {
     id: 3,
@@ -46,12 +40,9 @@ const products = [
     description:
       "Keep your dog moving freely at every age. Our veterinarian-formulated blend supports joint flexibility, reduces stiffness, and helps rebuild cartilage for long-lasting mobility.",
     benefits: ["Joint Flexibility", "Hip Support", "Cartilage Repair", "Mobility", "Pain Relief", "Bone Strength"],
-    ingredients:
-      "Glucosamine HCl (500mg), MSM (Methylsulfonylmethane), Chondroitin Sulfate, Green-Lipped Mussel, Organic Turmeric, Hyaluronic Acid, Vitamin C, Omega-3 EPA/DHA, Boswellia Serrata, Manganese, Collagen Peptides, Yucca Schidigera",
     color: "#5b7fb5",
     icon: "◆",
     badge: "Premium",
-    hasImage: false,
   },
 ];
 
@@ -208,6 +199,7 @@ const Cart = ({ cart, setCart, isOpen, setIsOpen }) => {
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, color: TEXT_DARK, margin: 0 }}>Your Cart</h2>
           <button
             onClick={() => setIsOpen(false)}
+            aria-label="Close cart"
             style={{ background: "none", border: "none", fontSize: 28, cursor: "pointer", color: TEXT_MED, lineHeight: 1 }}
           >
             ×
@@ -225,7 +217,7 @@ const Cart = ({ cart, setCart, isOpen, setIsOpen }) => {
             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {cart.map((item, i) => (
                 <div
-                  key={i}
+                  key={`${item.id}-${item.subscription}`}
                   style={{
                     background: "white",
                     borderRadius: 12,
@@ -379,8 +371,8 @@ const Cart = ({ cart, setCart, isOpen, setIsOpen }) => {
                 letterSpacing: 0.5,
                 transition: "all 0.2s",
               }}
-              onMouseEnter={(e) => (e.target.style.background = TEAL_DARK)}
-              onMouseLeave={(e) => (e.target.style.background = TEAL)}
+              onMouseEnter={(e) => (e.currentTarget.style.background = TEAL_DARK)}
+              onMouseLeave={(e) => (e.currentTarget.style.background = TEAL)}
             >
               Checkout — ${total.toFixed(2)}
             </button>
@@ -459,7 +451,7 @@ const ProductCard = ({ product, addToCart }) => {
             position: "absolute",
             top: 16,
             left: 16,
-            background: product.badge === "Best Seller" ? CORAL : product.badge === "New" ? "#d4883a" : TEAL,
+            background: product.badge === "Best Seller" ? CORAL : product.color,
             color: "white",
             fontFamily: "'DM Sans', sans-serif",
             fontWeight: 700,
@@ -585,6 +577,7 @@ const FaqItem = ({ faq }) => {
     <div style={{ borderBottom: `1px solid ${CREAM_DARK}`, overflow: "hidden" }}>
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
         style={{
           width: "100%",
           padding: "20px 0",
@@ -633,7 +626,7 @@ export default function PawzaWebsite() {
   const [cartOpen, setCartOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
-  const [addedAnimation, setAddedAnimation] = useState(null);
+  const [selectedFreq, setSelectedFreq] = useState("Every 30 Days");
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -650,8 +643,6 @@ export default function PawzaWebsite() {
     } else {
       setCart([...cart, { ...product, qty: 1, subscription }]);
     }
-    setAddedAnimation(product.id);
-    setTimeout(() => setAddedAnimation(null), 1000);
     setCartOpen(true);
   };
 
@@ -664,30 +655,6 @@ export default function PawzaWebsite() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", background: CREAM, minHeight: "100vh", overflowX: "hidden" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { background: ${CREAM}; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        ::selection { background: ${TEAL}40; color: ${TEXT_DARK}; }
-        @media (max-width: 768px) {
-          .hero-grid { flex-direction: column !important; text-align: center !important; }
-          .hero-text h1 { font-size: 40px !important; }
-          .products-grid { grid-template-columns: 1fr !important; }
-          .stats-grid { grid-template-columns: 1fr 1fr !important; }
-          .testimonials-grid { grid-template-columns: 1fr !important; }
-          .footer-grid { grid-template-columns: 1fr !important; text-align: center !important; }
-          .nav-links { display: none !important; }
-          .mobile-menu-btn { display: flex !important; }
-          .ingredients-inner { flex-direction: column !important; }
-          .cta-flex { flex-direction: column !important; }
-        }
-      `}</style>
-
       {/* NAVIGATION */}
       <nav
         style={{
@@ -785,6 +752,8 @@ export default function PawzaWebsite() {
           <button
             className="mobile-menu-btn"
             onClick={() => setMobileMenu(!mobileMenu)}
+            aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenu}
             style={{
               display: "none",
               background: "none",
@@ -1167,26 +1136,34 @@ export default function PawzaWebsite() {
             Never run out of your pup's favorite supplements. Choose your delivery frequency, save 20% on every order, and enjoy free shipping — always. Cancel or pause anytime.
           </p>
           <div className="cta-flex" style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-            {["Every 30 Days", "Every 60 Days", "Every 90 Days"].map((freq, i) => (
-              <div
-                key={i}
-                style={{
-                  background: i === 0 ? "white" : "rgba(255,255,255,0.15)",
-                  color: i === 0 ? TEAL : "white",
-                  padding: "14px 28px",
-                  borderRadius: 12,
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontWeight: 700,
-                  fontSize: 15,
-                  cursor: "pointer",
-                  border: "2px solid rgba(255,255,255,0.3)",
-                  transition: "all 0.2s",
-                }}
-              >
-                {freq}
-                {i === 0 && <span style={{ display: "block", fontSize: 12, fontWeight: 500, marginTop: 2, color: TEXT_MED }}>Most Popular</span>}
-              </div>
-            ))}
+            {["Every 30 Days", "Every 60 Days", "Every 90 Days"].map((freq) => {
+              const isSelected = freq === selectedFreq;
+              return (
+                <button
+                  key={freq}
+                  onClick={() => setSelectedFreq(freq)}
+                  style={{
+                    background: isSelected ? "white" : "rgba(255,255,255,0.15)",
+                    color: isSelected ? TEAL : "white",
+                    padding: "14px 28px",
+                    borderRadius: 12,
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontWeight: 700,
+                    fontSize: 15,
+                    cursor: "pointer",
+                    border: isSelected ? "2px solid white" : "2px solid rgba(255,255,255,0.3)",
+                    transition: "all 0.2s",
+                  }}
+                >
+                  {freq}
+                  {freq === "Every 30 Days" && (
+                    <span style={{ display: "block", fontSize: 12, fontWeight: 500, marginTop: 2, color: isSelected ? TEXT_MED : "rgba(255,255,255,0.7)" }}>
+                      Most Popular
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
           <button
             onClick={() => scrollTo("products")}
